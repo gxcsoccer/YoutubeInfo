@@ -1,7 +1,10 @@
 var express = require('express'),
 	http = require('http'),
 	ytdl = require('ytdl'),
+	url = require('url'),
 	app = express();
+
+var YOUTUBE_URL = 'http://www.youtube.com/watch?v=';
 
 var allowCrossDomain = function(req, res, next) {
 		res.header('Access-Control-Allow-Origin', '*');
@@ -23,36 +26,32 @@ app.configure('development', function() {
 
 app.get('/video/:id', function(req, res) {
 	var id = req.params.id;
-	ytdl('http://www.youtube.com/watch?v=' + id, {
+	ytdl(YOUTUBE_URL + id, {
 		filter: function(format) {
 			return format.container === 'webm';
 		}
 	}).pipe(res);
+});
 
-	/*var options = {
-		host: 'www.youtube.com',
-		path: '/get_video_info?video_id=' + id,
-		method: 'GET'
-	};
+app.get('/webm/:id', function(req, res) {
+	var id = req.params.id;
+	ytdl.getInfo(YOUTUBE_URL + id, function(err, info) {
+		if (err) throw err;
 
-	var request = http.request(options, function(resp) {
-		console.log('STATUS: ' + res.statusCode);
-		console.log('HEADERS: ' + JSON.stringify(res.headers));
-		resp.setEncoding('utf8');
-		resp.on('data', function(chunk) {
-			console.log(chunk);
-			res.write(chunk);
+		var formats = info.formats;
+		formats = formats.filter(function(format) {
+			return format.container === 'webm';
 		});
-		resp.on('end', function() {
+
+		var format = formats[0];
+
+		if (!format) {
 			res.end();
-		});
-	});
+			return;
+		}
 
-	request.on('error', function(e) {
-		console.log(e);
+		res.end(url.format(url.parse(format.url, true)));
 	});
-
-	request.end();*/
 });
 
 app.listen(8080);
