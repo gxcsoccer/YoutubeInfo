@@ -34,8 +34,15 @@ app.get('/video/:id', function(req, res) {
 });
 
 app.get('/webm/:id', function(req, res) {
-	var id = req.params.id;
-	ytdl.getInfo(YOUTUBE_URL + id, function(err, info) {
+	var id = req.params.id,
+		ip = "151.250.112.220";//req.connection.remoteAddress;
+
+	console.log(ip);
+	ytdl.getInfo(YOUTUBE_URL + id, {
+		headers: {
+			'x-forwarded-for': ip
+		}
+	}, function(err, info) {
 		if (err) throw err;
 
 		var formats = info.formats;
