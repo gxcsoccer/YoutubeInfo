@@ -1,5 +1,6 @@
 var express = require('express'),
 	http = require('http'),
+	ytdl = require('ytdl'),
 	app = express();
 
 var allowCrossDomain = function(req, res, next) {
@@ -22,7 +23,13 @@ app.configure('development', function() {
 
 app.get('/video/:id', function(req, res) {
 	var id = req.params.id;
-	var options = {
+	ytdl('http://www.youtube.com/watch?v=' + id, {
+		filter: function(format) {
+			return format.container === 'webm';
+		}
+	}).pipe(res);
+
+	/*var options = {
 		host: 'www.youtube.com',
 		path: '/get_video_info?video_id=' + id,
 		method: 'GET'
@@ -45,7 +52,7 @@ app.get('/video/:id', function(req, res) {
 		console.log(e);
 	});
 
-	request.end();
+	request.end();*/
 });
 
 app.listen(8080);
