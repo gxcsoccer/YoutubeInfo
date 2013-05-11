@@ -6,15 +6,8 @@
 		<script src="http://code.jquery.com/jquery-1.9.1.min.js"></script>
 	</head>
 	<body>
-		<span id="result"></span>
+		<video controls autoplay="true" src="http://gxcsoccer-youtubeinfo.nodejitsu.com/video/Ghv-HnFQZ48">
+			Your browser does not support the video tag.
+		</video>
 	</body>
-	<script type="text/javascript">
-		var url = 'http://localhost:3000/video/VIK4RTN2J_8';
-        $.ajax({
-        	url: url,
-        	crossDomain: true
-        }).done(function(data) {
-        	$('#result').text(data);
-        });
-	</script>
 </html>

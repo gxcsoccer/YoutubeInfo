@@ -28,7 +28,7 @@ app.get('/video/:id', function(req, res) {
 	var id = req.params.id;
 	ytdl(YOUTUBE_URL + id, {
 		filter: function(format) {
-			return format.container === 'webm';
+			return format.container === 'mp4';
 		}
 	}).pipe(res);
 });
