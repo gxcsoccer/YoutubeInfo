@@ -33,32 +33,14 @@ app.get('/video/:id', function(req, res) {
 	}).pipe(res);
 });
 
-app.get('/webm/:id', function(req, res) {
+app.get('/:videotype/:id', function(req, res) {
 	var id = req.params.id,
-		ip = "151.250.112.220";//req.connection.remoteAddress;
-
-	console.log(ip);
-	ytdl.getInfo(YOUTUBE_URL + id, {
-		headers: {
-			'x-forwarded-for': ip
+		videotype = req.params.videotype;
+	ytdl(YOUTUBE_URL + id, {
+		filter: function(format) {
+			return format.container === videotype;
 		}
-	}, function(err, info) {
-		if (err) throw err;
-
-		var formats = info.formats;
-		formats = formats.filter(function(format) {
-			return format.container === 'webm';
-		});
-
-		var format = formats[0];
-
-		if (!format) {
-			res.end();
-			return;
-		}
-
-		res.end(url.format(url.parse(format.url, true)));
-	});
+	}).pipe(res);
 });
 
 app.listen(8080);
