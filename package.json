@@ -9,7 +9,7 @@
     "node": "0.8.x"
   },
   "dependencies": {
-    "express": "3.2.3",
+    "express": "3.3.2",
     "ytdl": "0.1.16"
   }
 }
